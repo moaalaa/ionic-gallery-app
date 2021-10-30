@@ -75,6 +75,7 @@ export default {
 
 		const { photos, capturePhoto } = usePhotoGallery(); 
 
+
 		return {
 			photos,
 			capturePhoto,
