@@ -1,4 +1,4 @@
-import { ref, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';

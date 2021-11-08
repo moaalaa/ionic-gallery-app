@@ -72,6 +72,8 @@ export default {
     IonImg,
   },
   setup() {
+    const { photos, capturePhoto, deletePhoto } = usePhotoGallery();
+
     const ensureDelete = async (photo: UserPhoto) => {
       const actionSheet = await actionSheetController.create({
         header: "Photos",
@@ -88,7 +90,7 @@ export default {
             text: "Cancel",
             role: "cancel",
             icon: close,
-            handler: () => {}, // action sheet will automatically closed noting we wan't to do
+            handler: () => ({}), // action sheet will automatically closed noting we wan't to do
           },
         ],
       });
@@ -96,13 +98,11 @@ export default {
       await actionSheet.present();
     }
 
-    const { photos, capturePhoto, deletePhoto } = usePhotoGallery();
-
     return {
       photos,
       capturePhoto,
       ensureDelete,
-		  deletePhoto,
+      deletePhoto,
       camera,
       trash,
       close,
