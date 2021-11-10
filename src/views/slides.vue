@@ -2,27 +2,142 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Tab 2</ion-title>
+        <ion-title>Photo Gallery</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Tab 2</ion-title>
-        </ion-toolbar>
-      </ion-header>
+
+    <ion-content :fullscreen="true" v-if="!isLoading">
+      <swiper @swiper="setSwiperInstance" zoom keyboard :loop="true" :centeredSlides="true" :autoplay="{ 'delay': 2500, 'disableOnInteraction': false }" >
+
+          <swiper-slide :key="photo" v-for="photo in photos" >
+
+            <ion-img :src="photo.webViewPath" @click="ensureDelete(photo)"></ion-img>
+          
+          </swiper-slide>
+
+      </swiper>      
+    </ion-content>
+
+    <ion-content :fullscreen="true" v-else>
       
-      <ExploreContainer name="Tab 2 page" />
+			<ion-grid>
+        <ion-row>
+          <ion-col size="4" :key="index" v-for="index in 15">
+            <ion-thumbnail>
+							<ion-skeleton-text animated></ion-skeleton-text>
+            </ion-thumbnail>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
+import {
+  actionSheetController,
+  IonPage,
+  IonHeader,
+  IonIcon,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonImg,
+  IonSkeletonText,
+  IonThumbnail,
+  IonicSwiper,
+} from "@ionic/vue";
 
-export default  {
-  name: 'Tab2',
-  components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
-}
+import { ref } from "vue";
+
+import SwiperCore, { Autoplay, Keyboard, Zoom } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/vue";
+
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
+
+import { trash, close } from "ionicons/icons";
+
+import { usePhotoGallery } from "@/composables/usePhotoGallery";
+import { UserPhoto } from "@/types/PhotoTypes";
+
+import 'swiper/swiper-bundle.min.css';
+import '@ionic/vue/css/ionic-swiper.css';
+
+SwiperCore.use([IonicSwiper, Keyboard, Zoom, Autoplay]);
+
+export default {
+  name: "Slides",
+  components: {
+    IonPage,
+    IonHeader,
+    IonIcon,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonImg,
+    IonSkeletonText,
+    IonThumbnail,
+    Swiper,
+    SwiperSlide,
+  },
+  setup() {
+    const isLoading = ref(true);
+    const slides = ref();
+
+    const { photos, deletePhoto } = usePhotoGallery();
+
+    const setSwiperInstance = (swiper: any) =>{
+      slides.value = swiper;
+    };
+
+    const ensureDelete = async (photo: UserPhoto) => {
+      await Haptics.impact({ style: ImpactStyle.Medium });
+
+      const actionSheet = await actionSheetController.create({
+        header: "Photos",
+        buttons: [
+          {
+            text: "Delete",
+            role: "destructive",
+            icon: trash,
+            handler: () => {
+              deletePhoto(photo);
+            },
+          },
+          {
+            text: "Cancel",
+            role: "cancel",
+            icon: close,
+            handler: () => ({}), // action sheet will automatically closed noting we wan't to do
+          },
+        ],
+      });
+
+      await actionSheet.present();
+    };
+
+		// Simulate Loading
+		setTimeout(() => {
+			isLoading.value = false;
+		}, 2000);
+
+    return {
+      isLoading,
+      photos,
+      setSwiperInstance,
+      ensureDelete,
+      deletePhoto,
+      trash,
+      close,
+    };
+  },
+};
 </script>

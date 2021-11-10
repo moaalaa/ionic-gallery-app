@@ -27,12 +27,12 @@
 
     <ion-content :fullscreen="true" v-else>
       
-
-      
 			<ion-grid>
         <ion-row>
           <ion-col size="4" :key="index" v-for="index in 15">
-							<ion-skeleton-text animated></ion-skeleton-text>
+            <ion-thumbnail>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-thumbnail>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -58,6 +58,7 @@ import {
   IonCol,
   IonImg,
   IonSkeletonText,
+  IonThumbnail,
 } from "@ionic/vue";
 
 import { ref } from "vue";
@@ -85,6 +86,7 @@ export default {
     IonCol,
     IonImg,
     IonSkeletonText,
+    IonThumbnail,
   },
   setup() {
     const isLoading = ref(true);
