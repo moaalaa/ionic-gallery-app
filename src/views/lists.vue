@@ -6,13 +6,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Photo Gallery</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
+    <ion-content :fullscreen="true" v-if="!isLoading">
       <ion-grid>
         <ion-row>
           <ion-col size="4" :key="photo" v-for="photo in photos">
@@ -29,6 +23,21 @@
           <ion-icon :icon="camera"></ion-icon>
         </ion-fab-button>
       </ion-fab>
+    </ion-content>
+
+    <ion-content :fullscreen="true" v-else>
+      
+
+      
+			<ion-grid>
+        <ion-row>
+          <ion-col size="4" :key="index" v-for="index in 15">
+							<ion-skeleton-text animated></ion-skeleton-text>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
     </ion-content>
   </ion-page>
 </template>
@@ -48,15 +57,20 @@ import {
   IonRow,
   IonCol,
   IonImg,
+  IonSkeletonText,
 } from "@ionic/vue";
+
+import { ref } from "vue";
+
+import { Haptics, ImpactStyle } from "@capacitor/haptics";
 
 import { camera, trash, close } from "ionicons/icons";
 
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
-import { UserPhoto } from '@/types/PhotoTypes';
+import { UserPhoto } from "@/types/PhotoTypes";
 
 export default {
-  name: "Tab2",
+  name: "Lists",
   components: {
     IonPage,
     IonHeader,
@@ -70,11 +84,16 @@ export default {
     IonRow,
     IonCol,
     IonImg,
+    IonSkeletonText,
   },
   setup() {
+    const isLoading = ref(true);
+
     const { photos, capturePhoto, deletePhoto } = usePhotoGallery();
 
     const ensureDelete = async (photo: UserPhoto) => {
+      await Haptics.impact({ style: ImpactStyle.Medium });
+
       const actionSheet = await actionSheetController.create({
         header: "Photos",
         buttons: [
@@ -96,9 +115,15 @@ export default {
       });
 
       await actionSheet.present();
-    }
+    };
+
+		// Simulate Loading
+		setTimeout(() => {
+			isLoading.value = false;
+		}, 2000);
 
     return {
+      isLoading,
       photos,
       capturePhoto,
       ensureDelete,
