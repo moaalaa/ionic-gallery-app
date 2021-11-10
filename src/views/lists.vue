@@ -12,7 +12,7 @@
           <ion-col size="4" :key="photo" v-for="photo in photos">
             <ion-img
               :src="photo.webViewPath"
-              @click="ensureDelete(photo)"
+              @click="showOptions(photo)"
             ></ion-img>
           </ion-col>
         </ion-row>
@@ -65,7 +65,7 @@ import { ref } from "vue";
 
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 
-import { camera, trash, close } from "ionicons/icons";
+import { camera, trash, close, share } from "ionicons/icons";
 
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { UserPhoto } from "@/types/PhotoTypes";
@@ -91,9 +91,9 @@ export default {
   setup() {
     const isLoading = ref(true);
 
-    const { photos, capturePhoto, deletePhoto } = usePhotoGallery();
+    const { photos, capturePhoto, deletePhoto, sharePhoto } = usePhotoGallery();
 
-    const ensureDelete = async (photo: UserPhoto) => {
+    const showOptions = async (photo: UserPhoto) => {
       await Haptics.impact({ style: ImpactStyle.Medium });
 
       const actionSheet = await actionSheetController.create({
@@ -105,6 +105,13 @@ export default {
             icon: trash,
             handler: () => {
               deletePhoto(photo);
+            },
+          },
+          {
+            text: "Share",
+            icon: share,
+            handler: () => {
+              sharePhoto(photo);
             },
           },
           {
@@ -128,8 +135,9 @@ export default {
       isLoading,
       photos,
       capturePhoto,
-      ensureDelete,
+      showOptions,
       deletePhoto,
+      sharePhoto,
       camera,
       trash,
       close,

@@ -5,6 +5,7 @@ import { Storage } from '@capacitor/storage';
 import { isPlatform, onIonViewDidEnter } from '@ionic/vue';
 import { Capacitor } from '@capacitor/core';
 import { UserPhoto } from '@/types/PhotoTypes';
+import { FileSharer } from '@byteowls/capacitor-filesharer';
 
 const PHOTO_STORAGE = 'photos';
 const photos = ref<UserPhoto[]>([]);
@@ -102,6 +103,7 @@ export function usePhotoGallery() {
 		const cameraPhoto = await Camera.getPhoto({
 			resultType: CameraResultType.Uri,
 			source: CameraSource.Camera,
+			saveToGallery: true,
 			quality: 100,
 		});
 
@@ -129,7 +131,27 @@ export function usePhotoGallery() {
 		});
 	}
 
-	return { photos, capturePhoto, deletePhoto };
+	const sharePhoto = async (photo: UserPhoto) => {
+		const extension = photo.filePath.substr(photo.filePath.lastIndexOf('.') + 1);
+
+		const file = await Filesystem.readFile({
+			path: photo.filePath,
+			directory: Directory.Data,
+		});
+
+		FileSharer.share({
+            filename: photo.filePath,
+            base64Data: file.data,
+            contentType: "image/jpeg",
+        }).then(() => {
+            console.log('File Shared');
+			
+        }).catch(error => {
+            console.error("File sharing failed", error.message);
+        });
+	}
+
+	return { photos, capturePhoto, deletePhoto, sharePhoto };
 }
 
 

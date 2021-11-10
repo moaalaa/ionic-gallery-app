@@ -11,7 +11,7 @@
 
           <swiper-slide :key="photo" v-for="photo in photos" >
 
-            <ion-img :src="photo.webViewPath" @click="ensureDelete(photo)"></ion-img>
+            <ion-img :src="photo.webViewPath" @click="showOptions(photo)"></ion-img>
           
           </swiper-slide>
 
@@ -40,7 +40,6 @@ import {
   actionSheetController,
   IonPage,
   IonHeader,
-  IonIcon,
   IonToolbar,
   IonTitle,
   IonContent,
@@ -60,7 +59,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 
-import { trash, close } from "ionicons/icons";
+import { trash, close, share } from "ionicons/icons";
 
 import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { UserPhoto } from "@/types/PhotoTypes";
@@ -75,7 +74,6 @@ export default {
   components: {
     IonPage,
     IonHeader,
-    IonIcon,
     IonToolbar,
     IonTitle,
     IonContent,
@@ -92,13 +90,13 @@ export default {
     const isLoading = ref(true);
     const slides = ref();
 
-    const { photos, deletePhoto } = usePhotoGallery();
+    const { photos, deletePhoto, sharePhoto } = usePhotoGallery();
 
     const setSwiperInstance = (swiper: any) =>{
       slides.value = swiper;
     };
 
-    const ensureDelete = async (photo: UserPhoto) => {
+    const showOptions = async (photo: UserPhoto) => {
       await Haptics.impact({ style: ImpactStyle.Medium });
 
       const actionSheet = await actionSheetController.create({
@@ -110,6 +108,13 @@ export default {
             icon: trash,
             handler: () => {
               deletePhoto(photo);
+            },
+          },
+          {
+            text: "Share",
+            icon: share,
+            handler: () => {
+              sharePhoto(photo);
             },
           },
           {
@@ -133,8 +138,9 @@ export default {
       isLoading,
       photos,
       setSwiperInstance,
-      ensureDelete,
+      showOptions,
       deletePhoto,
+      sharePhoto,
       trash,
       close,
     };

@@ -23,6 +23,10 @@ const routes: Array<RouteRecordRaw> = [
 				path: 'slides',
 				component: () => import('@/views/slides.vue')
 			},
+			{
+				path: 'camera',
+				component: () => import('@/views/camera.vue')
+			},
 		]
 	}
 ]
