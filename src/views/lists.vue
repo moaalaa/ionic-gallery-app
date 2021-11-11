@@ -2,6 +2,10 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button auto-hide="false" color="primary"></ion-menu-button>
+        </ion-buttons>
+
         <ion-title>Photo Gallery</ion-title>
       </ion-toolbar>
     </ion-header>
@@ -10,10 +14,14 @@
       <ion-grid>
         <ion-row>
           <ion-col size="4" :key="photo" v-for="photo in photos">
-            <ion-img
-              :src="photo.webViewPath"
-              @click="showOptions(photo)"
-            ></ion-img>
+            <ion-card color="danger">
+              <ion-img
+                :src="photo.webViewPath"
+                @click="showOptions(photo)"
+              ></ion-img>
+
+              <ion-card-content v-text="photo.filePath"></ion-card-content>
+            </ion-card>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -26,8 +34,7 @@
     </ion-content>
 
     <ion-content :fullscreen="true" v-else>
-      
-			<ion-grid>
+      <ion-grid>
         <ion-row>
           <ion-col size="4" :key="index" v-for="index in 15">
             <ion-thumbnail>
@@ -36,8 +43,6 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-
-
     </ion-content>
   </ion-page>
 </template>
@@ -59,6 +64,10 @@ import {
   IonImg,
   IonSkeletonText,
   IonThumbnail,
+  IonButtons,
+  IonMenuButton,
+  IonCard,
+  IonCardContent,
 } from "@ionic/vue";
 
 import { ref } from "vue";
@@ -87,6 +96,10 @@ export default {
     IonImg,
     IonSkeletonText,
     IonThumbnail,
+    IonButtons,
+    IonMenuButton,
+    IonCard,
+    IonCardContent,
   },
   setup() {
     const isLoading = ref(true);
@@ -97,7 +110,7 @@ export default {
       await Haptics.impact({ style: ImpactStyle.Medium });
 
       const actionSheet = await actionSheetController.create({
-        header: "Photos",
+        header: `Photo ${photo.filePath} Options`,
         buttons: [
           {
             text: "Delete",
@@ -126,10 +139,10 @@ export default {
       await actionSheet.present();
     };
 
-		// Simulate Loading
-		setTimeout(() => {
-			isLoading.value = false;
-		}, 2000);
+    // Simulate Loading
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 2000);
 
     return {
       isLoading,
@@ -145,3 +158,9 @@ export default {
   },
 };
 </script>
+
+<style>
+.h-100 {
+  height: 100%;
+}
+</style>

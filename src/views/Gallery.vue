@@ -33,7 +33,6 @@ export default {
   name: 'Tabs',
   components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonIcon, IonPage, IonRouterOutlet },
   setup() {
-    
     return {
       camera,
       images, 
