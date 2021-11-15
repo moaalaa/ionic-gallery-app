@@ -20,6 +20,11 @@
           <ion-icon :icon="albums" />
           <ion-label>Quick View</ion-label>
         </ion-tab-button>
+        
+        <ion-tab-button color="danger" tab="device-info" href="/gallery/device-info">
+          <ion-icon :icon="fingerPrint" />
+          <ion-label>Device Info</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -27,7 +32,7 @@
 
 <script lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { images, albums, camera } from 'ionicons/icons';
+import { images, albums, camera, fingerPrint } from 'ionicons/icons';
 
 export default {
   name: 'Tabs',
@@ -37,6 +42,7 @@ export default {
       camera,
       images, 
       albums,
+      fingerPrint,
     }
   }
 }

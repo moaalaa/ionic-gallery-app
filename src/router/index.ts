@@ -27,6 +27,10 @@ const routes: Array<RouteRecordRaw> = [
 				path: 'camera',
 				component: () => import('@/views/camera.vue')
 			},
+			{
+				path: 'device-info',
+				component: () => import('@/views/deviceInfo.vue')
+			},
 		]
 	}
 ]

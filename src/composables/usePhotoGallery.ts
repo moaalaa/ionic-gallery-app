@@ -132,22 +132,24 @@ export function usePhotoGallery() {
 	}
 
 	const sharePhoto = async (photo: UserPhoto) => {
-		const extension = photo.filePath.substr(photo.filePath.lastIndexOf('.') + 1);
+		
+		// Share photo file from filesystem
+		// -- if file name have a / like resources/data/image.jpg 
+		// -- then it will get lat / index and add 1 index on it so it will start 
+		// -- from image name like image.jpg 
+		// -- if there is no / 'lastIndexOf' will return -1
+		// --  so after we add 1 index on it so it will start from image name like image.jpg also
+		const filename = photo.filePath.substr(photo.filePath.lastIndexOf('/') + 1);
 
 		const file = await Filesystem.readFile({
-			path: photo.filePath,
+			path: filename,
 			directory: Directory.Data,
 		});
-
-		FileSharer.share({
-            filename: photo.filePath,
+		
+		await FileSharer.share({
+            filename,
             base64Data: file.data,
             contentType: "image/jpeg",
-        }).then(() => {
-            console.log('File Shared');
-			
-        }).catch(error => {
-            console.error("File sharing failed", error.message);
         });
 	}
 

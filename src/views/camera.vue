@@ -14,7 +14,7 @@ import { usePhotoGallery } from "@/composables/usePhotoGallery";
 import { useRouter } from 'vue-router';
 
 export default {
-  name: "Lists",
+  name: "camera",
   components: {
     IonPage,
   },

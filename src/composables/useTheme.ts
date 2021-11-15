@@ -21,9 +21,9 @@ export function useTheme () {
     
     const isDarkTheme = computed(() => theme.value == DARK_THEME_KEY);
 
-    const changeTheme = (wanted_theme: string|null = null) => {
-        if (wanted_theme === LIGHT_THEME_KEY || wanted_theme === DARK_THEME_KEY) {
-            theme.value = wanted_theme;
+    const changeTheme = (wantedTheme: string|null = null) => {
+        if (wantedTheme === LIGHT_THEME_KEY || wantedTheme === DARK_THEME_KEY) {
+            theme.value = wantedTheme;
         } else {
             theme.value = theme.value === LIGHT_THEME_KEY ? DARK_THEME_KEY : LIGHT_THEME_KEY;
         }
